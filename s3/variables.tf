@@ -7,7 +7,7 @@ variable "aws_region" {
 variable "bucket_name" {
   description = "S3 bucket name"
   type        = string
-  default     = "tonicbenn-is-great"
+  default     = "hry-dev-bucket"
 
   validation {
     condition = length(var.bucket_name) > 2 && length(var.bucket_name) < 64 && can(regex("^[0-9A-Za-z-]+$", var.bucket_name))

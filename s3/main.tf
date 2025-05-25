@@ -17,22 +17,22 @@ provider "aws" {
 ########################
 # Bucket creation
 ########################
-resource "aws_s3_bucket" "my_protected_bucket" {
+resource "aws_s3_bucket" "hry_dev_bucket" {
   bucket = var.bucket_name
 }
 
 ##########################
 # Bucket private access
 ##########################
-resource "aws_s3_bucket_acl" "my_protected_bucket_acl" {
-  bucket = aws_s3_bucket.my_protected_bucket.id
+resource "aws_s3_bucket_acl" "hry_dev_bucket_acl" {
+  bucket = aws_s3_bucket.hry_dev_bucket.id
   acl    = "private"
   depends_on = [aws_s3_bucket_ownership_controls.s3_bucket_acl_ownership]
 }
 
 # Resource to avoid error "AccessControlListNotSupported: The bucket does not allow ACLs"
 resource "aws_s3_bucket_ownership_controls" "s3_bucket_acl_ownership" {
-  bucket = aws_s3_bucket.my_protected_bucket.id
+  bucket = aws_s3_bucket.hry_dev_bucket.id
   rule {
     object_ownership = "ObjectWriter"
   }
@@ -41,8 +41,8 @@ resource "aws_s3_bucket_ownership_controls" "s3_bucket_acl_ownership" {
 #############################
 # Enable bucket versioning
 #############################
-resource "aws_s3_bucket_versioning" "my_protected_bucket_versioning" {
-  bucket = aws_s3_bucket.my_protected_bucket.id
+resource "aws_s3_bucket_versioning" "hry_dev_bucket_versioning" {
+  bucket = aws_s3_bucket.hry_dev_bucket.id
   versioning_configuration {
     status = "Enabled"
   }
@@ -50,11 +50,11 @@ resource "aws_s3_bucket_versioning" "my_protected_bucket_versioning" {
 
 # Creating Lifecycle Rule
 ############################
-resource "aws_s3_bucket_lifecycle_configuration" "my_protected_bucket_lifecycle_rule" {
+resource "aws_s3_bucket_lifecycle_configuration" "hry_dev_bucket_lifecycle_rule" {
   # Must have bucket versioning enabled first
-  depends_on = [aws_s3_bucket_versioning.my_protected_bucket_versioning]
+  depends_on = [aws_s3_bucket_versioning.hry_dev_bucket_versioning]
 
-  bucket = aws_s3_bucket.my_protected_bucket.bucket
+  bucket = aws_s3_bucket.hry_dev_bucket.bucket
 
   rule {
     id = "basic_config"
@@ -84,8 +84,8 @@ resource "aws_s3_bucket_lifecycle_configuration" "my_protected_bucket_lifecycle_
 # Disabling bucket
 # public access
 ########################
-resource "aws_s3_bucket_public_access_block" "my_protected_bucket_access" {
-  bucket = aws_s3_bucket.my_protected_bucket.id
+resource "aws_s3_bucket_public_access_block" "hry_dev_bucket_access" {
+  bucket = aws_s3_bucket.hry_dev_bucket.id
 
   # Block public access
   block_public_acls   = true
